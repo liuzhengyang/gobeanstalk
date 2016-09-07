@@ -4,7 +4,7 @@ Now it's a quite simple implementation. I'll keep improving and refactoring it.
 ## Examples
 
 ```
-ddr := "localhost:11300"
+    addr := "localhost:11300"
 	conn, e := net.Dial("tcp", addr)
 	defer conn.Close()
 	if e != nil {
