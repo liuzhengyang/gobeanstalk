@@ -96,7 +96,7 @@ func (this *Conn) deleteMessage(id int) {
 	fmt.Printf("delete %s\n", string(line))
 }
 
-func (this *Conn) Listen(tube string) {
+func (this *Conn) Listen(tube string, fun func(body string) bool) {
 	listenConnection, _ := net.Dial("tcp", this.addr)
 	newConn, _ := NewConn(listenConnection, this.addr)
 	newConn.Use(tube)
@@ -104,6 +104,8 @@ func (this *Conn) Listen(tube string) {
 	for {
 		id, data := Reserve(newConn)
 		fmt.Printf("Receive %s\n", data)
+		success := fun(data)
+		fmt.Printf("Deal Result %s", success)
 		newConn.deleteMessage(id)
 	}
 }

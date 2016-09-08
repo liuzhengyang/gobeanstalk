@@ -16,5 +16,9 @@ func main() {
 	go putFunc()
 	id := <-channel
 	fmt.Printf("Receive from channel message of another goroutine %d", id)
-	newConn.Listen("test2")
+	dealFunc := func(body string) bool{
+		fmt.Printf("receive %s", body)
+		return true
+	}
+	newConn.Listen("test2", dealFunc)
 }
