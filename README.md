@@ -4,13 +4,15 @@ Now it's a quite simple implementation. I'll keep improving and refactoring it.
 ## Examples
 
 ```
-    addr := "localhost:11300"
-	conn, e := net.Dial("tcp", addr)
-	defer conn.Close()
-	if e != nil {
-		panic("connect error")
-	}
-	newConn, _ := NewConn(conn, addr)
-	go Put(newConn, "hello", "test2", 3)
-	Listen(newConn, "test2")
+        addr := "localhost:11300"
+    	newConn := client.NewConnection(addr)
+    	channel := make(chan int)
+    	putFunc := func() {
+    		id, _ := newConn.PutWithTube("hello", "test2", 3)
+    		channel <- id
+    	}
+    	go putFunc()
+    	id := <-channel
+    	fmt.Printf("Receive from channel message of another goroutine %d", id)
+    	newConn.Listen("test2")
 ```
