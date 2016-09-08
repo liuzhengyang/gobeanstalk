@@ -4,7 +4,15 @@ Now it's a quite simple implementation. I'll keep improving and refactoring it.
 ## Examples
 
 ```
-addr := "localhost:11300"
+package main
+
+import (
+	"fmt"
+	"beanstalk-go/client"
+)
+
+func main() {
+	addr := "localhost:11300"
 	newConn := client.NewConnection(addr)
 	channel := make(chan int)
 	putFunc := func() {
@@ -19,4 +27,6 @@ addr := "localhost:11300"
 		return true
 	}
 	newConn.Listen("test2", dealFunc)
+}
+
 ```
