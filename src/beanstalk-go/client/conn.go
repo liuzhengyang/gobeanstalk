@@ -109,7 +109,7 @@ func (this *Conn) Listen(tube string, fun func(body string) bool) {
 		id, data := Reserve(newConn)
 		fmt.Printf("Receive %s\n", data)
 		success := fun(data)
-		fmt.Printf("Deal Result %s", success)
+		fmt.Printf("Deal Result %s\n", success)
 		newConn.deleteMessage(id)
 	}
 }
