@@ -27,6 +27,10 @@ func NewConnection(hostAndIp string) *Conn {
 	return c
 }
 
+func (this *Conn) Close() {
+	this.conn.Close()
+}
+
 // haven't deal with fail conditions
 func sendAndGetOneLine(conn *Conn, command string) string {
 	conn.bufWriter.Write([]byte(command))
