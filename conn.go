@@ -7,7 +7,6 @@ import (
 	"bufio"
 	"strings"
 	"errors"
-	"beanstalk-go/client/command"
 )
 
 type Conn struct {
@@ -81,7 +80,7 @@ func (this *Conn) Watch(tube string) (bool, int, error) {
 }
 
 func (this *Conn) Put(body string, delay int) (int, error) {
-	command := client.NewPut(1, delay, 100, []byte(body))
+	command := NewPut(1, delay, 100, []byte(body))
 	this.bufWriter.Write(command.GetBytes())
 	this.bufWriter.Flush()
 	line, _, _ := this.bufReader.ReadLine()
