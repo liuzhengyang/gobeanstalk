@@ -72,7 +72,7 @@ func (this *Conn) Watch(tube string) (bool, int, error) {
 	if strings.HasPrefix(res, "WATCHING") {
 		fmt.Println(len(res))
 		numStr := res[9:]
-		count,_ := strconv.Atoi(numStr)
+		count, _ := strconv.Atoi(numStr)
 		fmt.Printf("Watching count %d\n", count)
 		return true, count, nil
 	} else {
