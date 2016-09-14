@@ -7,6 +7,7 @@ import (
 	"bufio"
 	"strings"
 	"beanstalk-go/client/command"
+	"errors"
 )
 
 type Conn struct {
@@ -18,7 +19,6 @@ type Conn struct {
 
 func NewConnection(hostAndIp string) *Conn {
 	conn, _ := net.Dial("tcp", hostAndIp)
-	//defer conn.Close()
 	c := new(Conn)
 	c.conn = conn
 	c.addr = hostAndIp
@@ -56,14 +56,28 @@ func NewConn(conn net.Conn, addr string) (*Conn, error) {
 	return c, nil
 }
 
-func (this *Conn) Use(tube string) {
+func (this *Conn) Use(tube string) (bool, error) {
 	command := fmt.Sprintf("use %s\r\n", tube)
-	sendAndGetOneLine(this, command)
+	res := sendAndGetOneLine(this, command)
+	if strings.HasPrefix(res, "USING") {
+		return true, nil
+	} else {
+		return false, errors.New(res)
+	}
 }
 
-func (this *Conn) Watch(tube string) {
+func (this *Conn) Watch(tube string) (bool, int, error) {
 	command := fmt.Sprintf("watch %s\r\n", tube)
-	sendAndGetOneLine(this, command)
+	res := sendAndGetOneLine(this, command)
+	if strings.HasPrefix(res, "WATCHING") {
+		fmt.Println(len(res))
+		numStr := res[9:]
+		count,_ := strconv.Atoi(numStr)
+		fmt.Printf("Watching count %d\n", count)
+		return true, count, nil
+	} else {
+		return false, 0, errors.New(res)
+	}
 }
 
 func (this *Conn) Put(body string, delay int) (int, error) {
