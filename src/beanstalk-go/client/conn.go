@@ -6,8 +6,8 @@ import (
 	"net"
 	"bufio"
 	"strings"
-	"beanstalk-go/client/command"
 	"errors"
+	"beanstalk-go/client/command"
 )
 
 type Conn struct {
