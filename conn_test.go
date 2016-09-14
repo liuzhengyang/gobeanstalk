@@ -1,4 +1,4 @@
-package beanstalk
+package gobeanstalk
 
 import (
 	"fmt"
