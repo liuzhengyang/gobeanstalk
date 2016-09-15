@@ -1,7 +1,7 @@
 # This is a [beanstalkd](https://github.com/kr/beanstalkd) client for Go.
 
 [![Join the chat at https://gitter.im/go-beanstalk/Lobby](https://badges.gitter.im/go-beanstalk/Lobby.svg)](https://gitter.im/go-beanstalk/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![travis status](https://travis-ci.org/liuzhengyang/go-beanstalk.svg?branch=master)](https://travis-ci.org/liuzhengyang/go-beanstalk)
+[![travis status](https://travis-ci.org/liuzhengyang/gobeanstalk.svg?branch=master)](https://travis-ci.org/liuzhengyang/gobeanstalk)
 
 [中文文档] (./README-zh_CN.md)
 
