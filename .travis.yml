@@ -2,8 +2,12 @@ language: go
 
 go:
   - 1.7
+  - 1.6
+  - 1.7.1
   - tip
 
 before_install:
   - git clone https://github.com/kr/beanstalkd && cd beanstalkd
   - nohup ./beanstalkd &
+
+scriptr: go test -v ./...

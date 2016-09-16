@@ -2,9 +2,10 @@ package gobeanstalk
 
 import (
 	"fmt"
+	"testing"
 )
 
-func main() {
+func TestNewConnection(t *testing.T) {
 	addr := "localhost:11300"  // define server address
 	newConn := NewConnection(addr)   // create new connection
 	channel := make(chan int)   // create int channel
