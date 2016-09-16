@@ -3,7 +3,7 @@
 [![Join the chat at https://gitter.im/go-beanstalk/Lobby](https://badges.gitter.im/go-beanstalk/Lobby.svg)](https://gitter.im/go-beanstalk/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![travis status](https://travis-ci.org/liuzhengyang/gobeanstalk.svg?branch=master)](https://travis-ci.org/liuzhengyang/gobeanstalk)
 
-[中文文档] (./README-zh_CN.md)
+[中文文档] (https://github.com/liuzhengyang/gobeanstalk/blob/master/README-zh_CN.md)
 
 Now it's a quite simple implementation. I'll keep improving and refactoring it.
 

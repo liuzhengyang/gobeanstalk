@@ -1,4 +1,4 @@
-# [go-beanstalk]( 是[beanstalkd](https://github.com/kr/beanstalkd) 的GO语言的一个客户端.
+# [go-beanstalk](https://github.com/liuzhengyang/gobeanstalk/blob/master/README-zh_CN.md) 是[beanstalkd](https://github.com/kr/beanstalkd) 的GO语言的一个客户端.
 项目还在开发中,欢迎大家提意见
 
 # 介绍
