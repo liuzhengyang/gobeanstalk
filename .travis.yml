@@ -10,5 +10,6 @@ before_install:
   - git clone https://github.com/kr/beanstalkd && cd beanstalkd
   - ll
   - nohup ./beanstalkd &
+  - cd ..
 
 script: go test -v ./...
