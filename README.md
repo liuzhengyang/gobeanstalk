@@ -16,6 +16,14 @@ Some use scenarios:
 * Check whether user finish the order in 5 minutes.
 * Start a process in one minutes.
 
+# Implemented Commands
+* use
+* watch
+* put
+* put-with-tube
+* reserve
+* reserve-with-timeout
+
 # How to use
 
 ## Mac
