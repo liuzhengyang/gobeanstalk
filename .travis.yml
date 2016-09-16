@@ -3,3 +3,7 @@ language: go
 go:
   - 1.7
   - tip
+
+before_install:
+  - git clone https://github.com/kr/beanstalkd && cd beanstalkd
+  - nohup ./beanstalkd &
