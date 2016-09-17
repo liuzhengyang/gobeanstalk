@@ -19,10 +19,13 @@ Some use scenarios:
 # Implemented Commands
 * use
 * watch
+* delete
 * put
 * put-with-tube
 * reserve
 * reserve-with-timeout
+* quit
+* ignore
 
 # How to use
 

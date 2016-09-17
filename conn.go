@@ -7,6 +7,7 @@ import (
 	"bufio"
 	"strings"
 	"errors"
+	"bytes"
 )
 
 type Conn struct {
@@ -14,6 +15,17 @@ type Conn struct {
 	addr      string
 	bufReader *bufio.Reader
 	bufWriter *bufio.Writer
+}
+
+func (this *Conn) WriteAndFlush(data []byte) (int, error) {
+	num, err := this.bufWriter.Write(data)
+	this.bufWriter.Flush()
+
+	return num, err
+}
+
+func (this *Conn) WriteAndFlushString(data string) (int, error) {
+	return this.WriteAndFlush([]byte(data))
 }
 
 func NewConnection(hostAndIp string) *Conn {
@@ -33,8 +45,7 @@ func (this *Conn) Close() {
 
 // haven't deal with fail conditions
 func sendAndGetOneLine(conn *Conn, command string) string {
-	conn.bufWriter.Write([]byte(command))
-	conn.bufWriter.Flush()
+	conn.WriteAndFlushString(command)
 	line, _, _ := conn.bufReader.ReadLine()
 	res := string(line)
 	fmt.Printf("res : %s\n", res)
@@ -80,9 +91,8 @@ func (this *Conn) Watch(tube string) (bool, int, error) {
 }
 
 func (this *Conn) Put(body string, delay int) (int, error) {
-	command := NewPut(1, delay, 100, []byte(body))
-	this.bufWriter.Write(command.GetBytes())
-	this.bufWriter.Flush()
+	command := NewPut(1, delay, 100, []byte(body)).GetBytes()
+	this.WriteAndFlush(command)
 	line, _, _ := this.bufReader.ReadLine()
 	fmt.Printf("Put answer %s\n", line)
 	token := strings.Split(string(line), " ")
@@ -92,9 +102,8 @@ func (this *Conn) Put(body string, delay int) (int, error) {
 }
 
 func Reserve(conn *Conn) (int, string) {
-	command := []byte("reserve\r\n")
-	conn.bufWriter.Write(command)
-	conn.bufWriter.Flush()
+	command := "reserve\r\n"
+	conn.WriteAndFlushString(command)
 	line, _, _ := conn.bufReader.ReadLine()
 	dataline, _, _ := conn.bufReader.ReadLine()
 	tokens := strings.Split(string(line), " ")
@@ -107,9 +116,7 @@ func Reserve(conn *Conn) (int, string) {
 
 func (this *Conn) deleteMessage(id int) {
 	commandStr := fmt.Sprintf("delete %d\r\n", id)
-	command := []byte(commandStr)
-	this.bufWriter.Write(command)
-	this.bufWriter.Flush()
+	this.WriteAndFlushString(commandStr)
 	line, _, _ := this.bufReader.ReadLine()
 	fmt.Printf("delete %s\n", string(line))
 }
@@ -126,5 +133,67 @@ func (this *Conn) Listen(tube string, fun func(body string) bool) {
 		fmt.Printf("Deal Result %s\n", success)
 		newConn.deleteMessage(id)
 	}
+}
+
+//func (this *Conn) Stats() map[string] string {
+//	command := "stats\r\n"
+//	this.bufWriter.Write([]byte(command))
+//	this.bufWriter.Flush()
+//	line, _ := this.bufReader.ReadSlice('\r')
+//	numTotal := line[:3]
+//	this.bufReader.rea
+//}
+
+func (this *Conn) Quit() error {
+	command := "quit\r\n"
+	_, err := this.WriteAndFlushString(command)
+	return err
+}
+
+func (this *Conn) Ignore(tube string) {
+	command := fmt.Sprintf("ignore %s\r\n", tube)
+	this.WriteAndFlushString(command)
+	line, _ := this.bufReader.ReadSlice('\r')
+	fmt.Printf("Ignore resp: %s\n", line)
+}
+
+
+// TODO read dedicated num of bytes, this solution has problems
+func (this *Conn) ListTubes() []string {
+	command := "list-tubes\r\n"
+	this.WriteAndFlushString(command)
+	firstLine, _, _ := this.bufReader.ReadLine()
+	bytesNum, _ := strconv.Atoi(string(firstLine[3:]))
+	fmt.Printf("BytesNum: %d\n", bytesNum)
+	res := []byte{}
+	readData := make([]byte, bytesNum)
+	fmt.Println("Readd")
+	num, _ := this.bufReader.Read(readData)
+	fmt.Printf("Read %d", num)
+	res = append(res, readData[:num]...)
+	return ParseYamlList(res)
+}
+
+//func (this *bufio.Writer) WriteAndFlush(data string) {
+//
+//}
+
+var (
+	yamlHead = []byte{'-', '-', '-', '\n'}
+)
+
+func ParseYamlList(data []byte) []string {
+	list := []string{}
+	fmt.Printf("Receive %s\n", string(data))
+	if bytes.HasPrefix(data, yamlHead) {
+		data = data[4:]
+	}
+	for _, s := range bytes.Split(data, []byte{'\n'}) {
+		if (!bytes.HasPrefix(s, []byte{'-', ' '})) {
+			continue
+		}
+		list = append(list, string(s[2:]))
+	}
+	return list
 }
 
